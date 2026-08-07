@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eletroposto Brumado — Recarga, mercado 24h e hotel ao lado</title>
+<meta name="description" content="Eletroposto em Brumado, Bahia. Recarga rápida 24 horas, mercado inteligente autônomo, espaço de convivência e hotel ao lado. Pare uma vez e resolva tudo.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=Inter+Tight:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ==========================================================================
+   1. TROQUE AS FOTOS AQUI  →  substitua "none" por url("fotos/arquivo.jpg")
+   Ex.:  --foto-hero: url("fotos/fachada-noite.jpg");
+   Use imagens grandes (mín. 1800px de largura) e leves (JPG, até ~400kb).
+   ========================================================================== */
+:root{
+  --foto-hero:      none;  /* Fachada do eletroposto à noite, com os carros carregando */
+  --foto-recarga:   none;  /* Close nos carregadores / cabo conectado ao carro */
+  --foto-corte-1:   none;  /* Foto larga: vista geral do pátio                  */
+  --foto-mercado:   none;  /* Interior do mercado inteligente, prateleiras       */
+  --foto-espaco:    none;  /* Espaço de convivência, mesas, poltronas            */
+  --foto-corte-2:   none;  /* Foto larga: fachada do hotel ao lado, à noite      */
+  --foto-hotel:     none;  /* Quarto ou recepção do hotel                        */
+  --foto-mapa:      none;  /* Vista aérea ou entrada do eletroposto              */
+
+  /* 2. PALETA */
+  --preto:      #050506;
+  --carvao:     #0D0D10;
+  --superficie: #16161A;
+  --linha:      #26262B;
+  --texto:      #F3F0EA;
+  --fraco:      #8C8880;
+
+  --ambar:      #FFB13C;   /* descanso, conveniência, hotel */
+  --gelo:       #6FD9E8;   /* energia, recarga              */
+  --acento:     var(--gelo);
+
+  /* 3. TIPOGRAFIA */
+  --display: "Bricolage Grotesque", system-ui, sans-serif;
+  --corpo:   "Inter Tight", system-ui, sans-serif;
+  --mono:    "IBM Plex Mono", ui-monospace, monospace;
+
+  --borda-tela: clamp(20px, 5vw, 72px);
+}
+
+*,*::before,*::after{ box-sizing:border-box; margin:0; padding:0 }
+html{ scroll-behavior:smooth; -webkit-text-size-adjust:100% }
+body{
+  background:var(--preto); color:var(--texto);
+  font-family:var(--corpo); font-size:clamp(16px,1.05vw,18px); line-height:1.6;
+  overflow-x:hidden; -webkit-font-smoothing:antialiased;
+}
+img{ display:block; max-width:100% }
+a{ color:inherit; text-decoration:none }
+:focus-visible{ outline:2px solid var(--acento); outline-offset:4px; border-radius:2px }
+
+/* ---------- utilitários de texto ---------- */
+.rotulo{
+  font-family:var(--mono); font-size:.68rem; letter-spacing:.22em;
+  text-transform:uppercase; color:var(--acento);
+  display:flex; align-items:center; gap:.7em;
+}
+.rotulo::before{
+  content:""; width:26px; height:1px; background:currentColor; flex:none;
+}
+.titulo{
+  font-family:var(--display); font-weight:800; line-height:.94;
+  letter-spacing:-.035em; font-size:clamp(2.3rem,5.4vw,4.6rem);
+  text-wrap:balance;
+}
+.texto{ color:#C9C5BD; max-width:46ch; font-size:1.02rem }
+.destaque{ color:var(--acento) }
+
+/* ---------- barra de carga (assinatura) ---------- */
+.carga{
+  position:fixed; z-index:60; right:calc(var(--borda-tela) * .55); top:50%;
+  transform:translateY(-50%);
+  display:flex; flex-direction:column; align-items:center; gap:12px;
+  mix-blend-mode:difference; pointer-events:none;
+}
+.carga__trilho{
+  width:3px; height:26vh; background:#3A3A3F; border-radius:99px;
+  position:relative; overflow:hidden;
+}
+.carga__nivel{
+  position:absolute; inset:auto 0 0 0; height:0%;
+  background:#fff; border-radius:99px; transition:height .1s linear;
+}
+.carga__num{
+  font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; color:#fff;
+  font-variant-numeric:tabular-nums;
+}
+
+/* ---------- topo ---------- */
+.topo{
+  position:fixed; inset:0 0 auto 0; z-index:50;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:20px var(--borda-tela);
+  transition:background .4s ease, backdrop-filter .4s ease, padding .4s ease;
+}
+.topo--fixo{
+  background:rgba(5,5,6,.82); backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--linha); padding-block:14px;
+}
+.marca{
+  font-family:var(--display); font-weight:800; font-size:1rem;
+  letter-spacing:-.02em; text-transform:uppercase; line-height:1;
+}
+.marca span{ color:var(--gelo) }
+.topo__menu{ display:flex; align-items:center; gap:26px }
+.topo__link{
+  font-family:var(--mono); font-size:.72rem; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--fraco); transition:color .25s;
+}
+.topo__link:hover{ color:var(--texto) }
+@media (max-width:760px){ .topo__link--some{ display:none } }
+
+/* ---------- botões ---------- */
+.botao{
+  display:inline-flex; align-items:center; gap:.65em;
+  font-family:var(--mono); font-size:.74rem; letter-spacing:.14em;
+  text-transform:uppercase; padding:15px 26px; border-radius:99px;
+  border:1px solid var(--linha); background:transparent; color:var(--texto);
+  transition:background .3s, color .3s, border-color .3s, transform .3s;
+}
+.botao:hover{ transform:translateY(-2px); border-color:var(--acento); color:var(--acento) }
+.botao--cheio{
+  background:var(--acento); color:#08080A; border-color:var(--acento); font-weight:500;
+}
+.botao--cheio:hover{ background:#fff; border-color:#fff; color:#08080A }
+.botao svg{ width:15px; height:15px; flex:none }
+
+/* ---------- HERO ---------- */
+.hero{
+  position:relative; min-height:100svh; display:flex; align-items:flex-end;
+  padding:0 var(--borda-tela) clamp(48px,7vh,90px);
+  isolation:isolate; overflow:hidden;
+}
+.hero__foto{
+  position:absolute; inset:-8% 0 -8% 0; z-index:-2;
+  background-image:var(--foto-hero),
+    radial-gradient(120% 90% at 78% 18%, rgba(111,217,232,.20), transparent 58%),
+    radial-gradient(90% 80% at 12% 92%, rgba(255,177,60,.16), transparent 60%),
+    linear-gradient(168deg,#101014,#050506 62%);
+  background-size:cover; background-position:center; will-change:transform;
+}
+.hero::after{
+  content:""; position:absolute; inset:0; z-index:-1;
+  background:linear-gradient(to top,rgba(5,5,6,.96) 4%,rgba(5,5,6,.45) 45%,rgba(5,5,6,.72) 100%);
+}
+.hero__conteudo{ max-width:1120px; width:100% }
+.hero__titulo{
+  font-family:var(--display); font-weight:800; letter-spacing:-.04em; line-height:.9;
+  font-size:clamp(3rem,10.2vw,8.6rem); text-transform:uppercase; margin:18px 0 0;
+}
+.hero__titulo em{ font-style:normal; color:var(--ambar); display:block }
+.hero__base{
+  display:flex; flex-wrap:wrap; gap:34px; align-items:flex-end;
+  justify-content:space-between; margin-top:38px;
+  border-top:1px solid var(--linha); padding-top:26px;
+}
+.hero__sub{ max-width:40ch; color:#CFCBC3 }
+.hero__acoes{ display:flex; flex-wrap:wrap; gap:12px }
+
+/* pulso de energia no hero */
+.pulso{ display:inline-block; width:7px; height:7px; border-radius:99px; background:var(--gelo);
+  box-shadow:0 0 0 0 rgba(111,217,232,.7); animation:pulso 2.4s ease-out infinite }
+@keyframes pulso{ 70%{ box-shadow:0 0 0 14px rgba(111,217,232,0) } 100%{ box-shadow:0 0 0 0 rgba(111,217,232,0) } }
+
+/* ---------- faixa de dados ---------- */
+.faixa{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  border-block:1px solid var(--linha); background:var(--carvao);
+}
+.faixa__item{ padding:34px var(--borda-tela); border-right:1px solid var(--linha) }
+.faixa__item:last-child{ border-right:0 }
+.faixa__num{
+  font-family:var(--display); font-weight:800; font-size:clamp(1.9rem,3.4vw,2.9rem);
+  line-height:1; letter-spacing:-.03em;
+}
+.faixa__leg{
+  font-family:var(--mono); font-size:.68rem; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--fraco); margin-top:12px;
+}
+@media (max-width:760px){
+  .faixa__item{ border-right:0; border-bottom:1px solid var(--linha); padding-block:26px }
+}
+
+/* ---------- PAINEL: foto lateral inteira + texto ---------- */
+.painel{ display:grid; grid-template-columns:1fr 1fr; align-items:stretch }
+.painel--invertido .painel__midia{ order:2 }
+
+.painel__midia{ position:relative }
+.painel__foto{
+  position:sticky; top:0; height:100svh; overflow:hidden;
+  background-color:var(--superficie); background-size:cover; background-position:center;
+}
+.painel__foto::after{
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(90deg,rgba(5,5,6,.55),transparent 40%,rgba(5,5,6,.35));
+}
+.p-recarga  .painel__foto{ background-image:var(--foto-recarga),
+  linear-gradient(200deg,rgba(111,217,232,.22),#0B0B0F 65%) }
+.p-mercado  .painel__foto{ background-image:var(--foto-mercado),
+  linear-gradient(160deg,rgba(255,177,60,.18),#0B0B0F 66%) }
+.p-espaco   .painel__foto{ background-image:var(--foto-espaco),
+  linear-gradient(220deg,rgba(255,177,60,.14),#0B0B0F 62%) }
+.p-hotel    .painel__foto{ background-image:var(--foto-hotel),
+  linear-gradient(140deg,rgba(255,177,60,.20),#0B0B0F 68%) }
+
+/* etiqueta indicando qual foto entra — APAGUE ao inserir as imagens reais */
+.legenda-foto{
+  position:absolute; left:20px; bottom:20px; z-index:2;
+  font-family:var(--mono); font-size:.62rem; letter-spacing:.18em; text-transform:uppercase;
+  color:rgba(243,240,234,.5); border:1px dashed rgba(243,240,234,.25);
+  padding:7px 11px; border-radius:4px; background:rgba(5,5,6,.35);
+}
+
+.painel__texto{
+  padding:clamp(70px,11vh,140px) var(--borda-tela);
+  display:flex; flex-direction:column; justify-content:center; gap:22px;
+  border-left:1px solid var(--linha);
+}
+.painel--invertido .painel__texto{ border-left:0; border-right:1px solid var(--linha) }
+
+.p-recarga{ --acento:var(--gelo) }
+.p-mercado,.p-espaco,.p-hotel{ --acento:var(--ambar) }
+
+/* lista técnica */
+.especs{ list-style:none; margin-top:8px; border-top:1px solid var(--linha) }
+.especs li{
+  display:flex; justify-content:space-between; gap:18px; align-items:baseline;
+  padding:15px 0; border-bottom:1px solid var(--linha);
+  font-family:var(--mono); font-size:.78rem; letter-spacing:.06em;
+}
+.especs span:first-child{ color:var(--fraco); text-transform:uppercase; letter-spacing:.14em; font-size:.68rem }
+.especs span:last-child{ color:var(--texto); text-align:right }
+
+@media (max-width:900px){
+  .painel{ grid-template-columns:1fr }
+  .painel--invertido .painel__midia{ order:0 }
+  .painel__foto{ position:relative; height:64svh }
+  .painel__texto{ border-left:0 !important; border-right:0 !important;
+    border-top:1px solid var(--linha); padding-block:64px }
+}
+
+/* ---------- CORTE: foto de borda a borda ---------- */
+.corte{
+  position:relative; min-height:88svh; display:flex; align-items:center;
+  padding:clamp(80px,14vh,170px) var(--borda-tela);
+  overflow:hidden; isolation:isolate; border-block:1px solid var(--linha);
+}
+.corte__foto{
+  position:absolute; inset:-12% 0 -12% 0; z-index:-2;
+  background-size:cover; background-position:center; will-change:transform;
+}
+.c-um .corte__foto{ background-image:var(--foto-corte-1),
+  linear-gradient(115deg,#0A0A0E,rgba(111,217,232,.18) 70%,#0A0A0E) }
+.c-dois .corte__foto{ background-image:var(--foto-corte-2),
+  linear-gradient(115deg,#0A0A0E,rgba(255,177,60,.18) 70%,#0A0A0E) }
+.corte::after{
+  content:""; position:absolute; inset:0; z-index:-1;
+  background:linear-gradient(90deg,rgba(5,5,6,.9),rgba(5,5,6,.5) 55%,rgba(5,5,6,.75));
+}
+.corte__frase{
+  font-family:var(--display); font-weight:800; letter-spacing:-.035em; line-height:.98;
+  font-size:clamp(2.1rem,5.6vw,4.8rem); max-width:19ch; text-wrap:balance;
+}
+.corte__frase em{ font-style:normal; color:var(--acento) }
+.c-dois{ --acento:var(--ambar) }
+
+/* ---------- LOCALIZAÇÃO ---------- */
+.local{ display:grid; grid-template-columns:1.05fr .95fr; align-items:stretch }
+.local__info{ padding:clamp(70px,11vh,140px) var(--borda-tela); display:flex; flex-direction:column; gap:26px }
+.local__foto{
+  min-height:60svh; background-color:var(--superficie);
+  background-image:var(--foto-mapa), linear-gradient(200deg,rgba(111,217,232,.14),#0B0B0F 60%);
+  background-size:cover; background-position:center; position:relative;
+  border-left:1px solid var(--linha);
+}
+.dados{ display:grid; gap:22px; margin-top:4px }
+.dados__bloco strong{
+  display:block; font-family:var(--mono); font-size:.68rem; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--fraco); font-weight:400; margin-bottom:6px;
+}
+.dados__bloco p{ font-size:1.05rem }
+.local__acoes{ display:flex; flex-wrap:wrap; gap:12px; margin-top:6px }
+@media (max-width:900px){
+  .local{ grid-template-columns:1fr }
+  .local__foto{ min-height:48svh; border-left:0; border-top:1px solid var(--linha) }
+}
+
+/* ---------- RODAPÉ ---------- */
+.rodape{
+  padding:clamp(56px,8vh,90px) var(--borda-tela) 34px;
+  border-top:1px solid var(--linha); background:var(--carvao);
+}
+.rodape__topo{
+  display:flex; flex-wrap:wrap; gap:34px; justify-content:space-between; align-items:flex-end;
+  padding-bottom:34px; border-bottom:1px solid var(--linha);
+}
+.rodape__frase{
+  font-family:var(--display); font-weight:800; letter-spacing:-.03em; line-height:1;
+  font-size:clamp(1.8rem,4.4vw,3.2rem); max-width:15ch;
+}
+.rodape__redes{ display:flex; gap:12px; flex-wrap:wrap }
+.rodape__fim{
+  display:flex; flex-wrap:wrap; gap:16px; justify-content:space-between;
+  margin-top:26px; font-family:var(--mono); font-size:.68rem;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--fraco);
+}
+
+/* ---------- revelação no scroll ---------- */
+.rev{ opacity:0; transform:translateY(30px); transition:opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1) }
+.rev.visivel{ opacity:1; transform:none }
+.rev-2{ transition-delay:.1s } .rev-3{ transition-delay:.2s } .rev-4{ transition-delay:.3s }
+
+@media (prefers-reduced-motion:reduce){
+  html{ scroll-behavior:auto }
+  .rev{ opacity:1; transform:none; transition:none }
+  .pulso{ animation:none }
+  .hero__foto,.corte__foto{ transform:none !important }
+}
+</style>
+</head>
+<body>
+
+<!-- barra de carga: enche conforme a página rola -->
+<div class="carga" aria-hidden="true">
+  <div class="carga__num" id="cargaNum">000%</div>
+  <div class="carga__trilho"><div class="carga__nivel" id="cargaNivel"></div></div>
+</div>
+
+<header class="topo" id="topo">
+  <a href="#inicio" class="marca">Eletroposto<span>.</span>Brumado</a>
+  <nav class="topo__menu">
+    <a href="#recarga"  class="topo__link topo__link--some">Recarga</a>
+    <a href="#mercado"  class="topo__link topo__link--some">Mercado</a>
+    <a href="#hotel"    class="topo__link topo__link--some">Hotel</a>
+    <a href="#local"    class="topo__link">Como chegar</a>
+  </nav>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="inicio">
+  <div class="hero__foto" data-parallax="0.18"></div>
+  <div class="hero__conteudo">
+    <p class="rotulo rev"><span class="pulso"></span>&nbsp;Brumado · Bahia · Aberto 24h</p>
+    <h1 class="hero__titulo rev rev-2">Seu carro carrega.<em>Você descansa.</em></h1>
+    <div class="hero__base rev rev-3">
+      <p class="hero__sub">Recarga rápida, mercado inteligente aberto a qualquer hora, espaço para esperar sentado e hotel na porta ao lado. Uma parada só, tudo resolvido.</p>
+      <div class="hero__acoes">
+        <!-- TROQUE o link do Google Maps -->
+        <a class="botao botao--cheio" href="https://maps.google.com/?q=Eletroposto+Brumado+BA" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          Como chegar
+        </a>
+        <!-- TROQUE o @ do Instagram -->
+        <a class="botao" href="https://instagram.com/seu_usuario" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3.6"/><circle cx="17.4" cy="6.6" r="1"/></svg>
+          Instagram
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAIXA DE DADOS ============ -->
+<section class="faixa">
+  <div class="faixa__item rev"><div class="faixa__num">24h</div><div class="faixa__leg">Todos os dias</div></div>
+  <div class="faixa__item rev rev-2"><div class="faixa__num">4</div><div class="faixa__leg">Pontos de recarga</div></div>
+  <div class="faixa__item rev rev-3"><div class="faixa__num">~30<span style="font-size:.45em">min</span></div><div class="faixa__leg">Para 80% de bateria</div></div>
+  <div class="faixa__item rev rev-4"><div class="faixa__num">0m</div><div class="faixa__leg">Do hotel até o carregador</div></div>
+</section>
+
+<!-- ============ RECARGA ============ -->
+<section class="painel p-recarga" id="recarga">
+  <div class="painel__midia">
+    <div class="painel__foto">
+      <span class="legenda-foto">Foto → carregador / cabo conectado</span>
+    </div>
+  </div>
+  <div class="painel__texto">
+    <p class="rotulo rev">Pontos de recarga</p>
+    <h2 class="titulo rev rev-2">Energia sem fila<br>e sem espera.</h2>
+    <p class="texto rev rev-3">Carregadores para todos os modelos que circulam por aqui, com vagas amplas e cobertura. Você conecta, confere pelo aplicativo e vai cuidar da sua vida — a gente avisa quando estiver pronto.</p>
+    <ul class="especs rev rev-4">
+      <li><span>Conectores</span><span>CCS2 · Type 2 · CHAdeMO</span></li>
+      <li><span>Potência</span><span>Até 60 kW em corrente contínua</span></li>
+      <li><span>Vagas</span><span>4 posições cobertas e iluminadas</span></li>
+      <li><span>Pagamento</span><span>Pix, cartão e aplicativo</span></li>
+      <li><span>Funcionamento</span><span>24 horas, todos os dias</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ CORTE 1 ============ -->
+<section class="corte c-um">
+  <div class="corte__foto" data-parallax="0.14"></div>
+  <p class="corte__frase rev">Parar de abastecer<br>virou <em>parar para viver.</em></p>
+</section>
+
+<!-- ============ MERCADO ============ -->
+<section class="painel painel--invertido p-mercado" id="mercado">
+  <div class="painel__midia">
+    <div class="painel__foto">
+      <span class="legenda-foto">Foto → mercado inteligente por dentro</span>
+    </div>
+  </div>
+  <div class="painel__texto">
+    <p class="rotulo rev">Mercado inteligente</p>
+    <h2 class="titulo rev rev-2">Entra, pega,<br>paga e segue.</h2>
+    <p class="texto rev rev-3">Loja autônoma dentro do eletroposto. Café quente, bebida gelada, lanche, itens de viagem e o que faltou na estrada. Sem fila e sem hora marcada: funciona no mesmo ritmo do carregador.</p>
+    <ul class="especs rev rev-4">
+      <li><span>Acesso</span><span>Livre, 24 horas</span></li>
+      <li><span>Pagamento</span><span>Autoatendimento por Pix ou cartão</span></li>
+      <li><span>Tem lá</span><span>Café, bebidas, lanches e conveniência</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ ESPAÇO ============ -->
+<section class="painel p-espaco" id="espaco">
+  <div class="painel__midia">
+    <div class="painel__foto">
+      <span class="legenda-foto">Foto → espaço de convivência</span>
+    </div>
+  </div>
+  <div class="painel__texto">
+    <p class="rotulo rev">Espaço de convivência</p>
+    <h2 class="titulo rev rev-2">Um lugar bom<br>para esperar.</h2>
+    <p class="texto rev rev-3">Área climatizada com mesas, tomadas e wi-fi. Dá para responder e-mail, tomar um café, esticar as pernas ou só sentar no ar-condicionado enquanto a bateria sobe. A espera deixa de ser tempo perdido.</p>
+    <ul class="especs rev rev-4">
+      <li><span>Estrutura</span><span>Mesas, poltronas e ar-condicionado</span></li>
+      <li><span>Conexão</span><span>Wi-fi liberado e tomadas em todas as mesas</span></li>
+      <li><span>Banheiros</span><span>Limpos, com acessibilidade</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ CORTE 2 ============ -->
+<section class="corte c-dois">
+  <div class="corte__foto" data-parallax="0.14"></div>
+  <p class="corte__frase rev">Você dorme.<br>O carro <em>enche a bateria.</em></p>
+</section>
+
+<!-- ============ HOTEL ============ -->
+<section class="painel painel--invertido p-hotel" id="hotel">
+  <div class="painel__midia">
+    <div class="painel__foto">
+      <span class="legenda-foto">Foto → hotel ao lado / quarto</span>
+    </div>
+  </div>
+  <div class="painel__texto">
+    <p class="rotulo rev">Hotel ao lado</p>
+    <h2 class="titulo rev rev-2">Chegue, conecte<br>e vá deitar.</h2>
+    <p class="texto rev rev-3">O hotel fica na porta ao lado — dá para ir a pé, com a mala na mão. Deixe o carro carregando à noite e acorde com autonomia cheia para seguir viagem. Quem viaja a trabalho ou está cortando a Bahia de ponta a ponta faz uma parada só.</p>
+    <ul class="especs rev rev-4">
+      <li><span>Distância</span><span>Ao lado, caminhando</span></li>
+      <li><span>Estacionamento</span><span>Carro no carregador durante a noite</span></li>
+      <li><span>Ideal para</span><span>Viagem longa e pernoite a trabalho</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ LOCALIZAÇÃO ============ -->
+<section class="local" id="local">
+  <div class="local__info">
+    <p class="rotulo rev">Onde estamos</p>
+    <h2 class="titulo rev rev-2">Fácil de achar,<br>fácil de voltar.</h2>
+    <div class="dados">
+      <div class="dados__bloco rev rev-3">
+        <strong>Endereço</strong>
+        <!-- TROQUE pelo endereço real -->
+        <p>Rua Exemplo, 000 — Centro<br>Brumado — BA, 46100-000</p>
+      </div>
+      <div class="dados__bloco rev rev-3">
+        <strong>Funcionamento</strong>
+        <p>Carregadores e mercado: 24 horas, todos os dias</p>
+      </div>
+      <div class="dados__bloco rev rev-4">
+        <strong>Contato</strong>
+        <!-- TROQUE pelo telefone real -->
+        <p>(77) 90000-0000</p>
+      </div>
+    </div>
+    <div class="local__acoes rev rev-4">
+      <a class="botao botao--cheio" href="https://maps.google.com/?q=Eletroposto+Brumado+BA" target="_blank" rel="noopener">Abrir no mapa</a>
+      <!-- TROQUE o número do WhatsApp: formato 55 + DDD + número -->
+      <a class="botao" href="https://wa.me/5577900000000" target="_blank" rel="noopener">Falar no WhatsApp</a>
+    </div>
+  </div>
+  <div class="local__foto">
+    <span class="legenda-foto">Foto → entrada / vista aérea</span>
+  </div>
+</section>
+
+<!-- ============ RODAPÉ ============ -->
+<footer class="rodape">
+  <div class="rodape__topo">
+    <p class="rodape__frase rev">Passe aqui na<br>próxima viagem.</p>
+    <div class="rodape__redes rev rev-2">
+      <a class="botao" href="https://instagram.com/seu_usuario" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3.6"/><circle cx="17.4" cy="6.6" r="1"/></svg>
+        Instagram
+      </a>
+      <a class="botao" href="https://maps.google.com/?q=Eletroposto+Brumado+BA" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+        Localização
+      </a>
+      <a class="botao" href="https://wa.me/5577900000000" target="_blank" rel="noopener">WhatsApp</a>
+    </div>
+  </div>
+  <div class="rodape__fim">
+    <span>Eletroposto Brumado — Brumado, Bahia</span>
+    <span>Recarga · Mercado 24h · Hotel ao lado</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduzir = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* --- revelação no scroll --- */
+  var alvos = document.querySelectorAll('.rev');
+  if('IntersectionObserver' in window && !reduzir){
+    var obs = new IntersectionObserver(function(entradas){
+      entradas.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('visivel'); obs.unobserve(e.target); }
+      });
+    },{ threshold:.18, rootMargin:'0px 0px -8% 0px' });
+    alvos.forEach(function(a){ obs.observe(a); });
+  } else {
+    alvos.forEach(function(a){ a.classList.add('visivel'); });
+  }
+
+  /* --- barra de carga + topo + parallax --- */
+  var nivel = document.getElementById('cargaNivel');
+  var num   = document.getElementById('cargaNum');
+  var topo  = document.getElementById('topo');
+  var paras = document.querySelectorAll('[data-parallax]');
+  var tick  = false;
+
+  function atualizar(){
+    var y = window.scrollY || window.pageYOffset;
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = max > 0 ? Math.min(100, Math.max(0, (y / max) * 100)) : 0;
+
+    nivel.style.height = pct + '%';
+    num.textContent = String(Math.round(pct)).padStart(3,'0') + '%';
+    topo.classList.toggle('topo--fixo', y > 60);
+
+    if(!reduzir){
+      paras.forEach(function(el){
+        var r = el.parentElement.getBoundingClientRect();
+        if(r.bottom > -200 && r.top < window.innerHeight + 200){
+          var d = parseFloat(el.dataset.parallax) || .15;
+          el.style.transform = 'translate3d(0,' + ((r.top * -d).toFixed(1)) + 'px,0)';
+        }
+      });
+    }
+    tick = false;
+  }
+
+  window.addEventListener('scroll', function(){
+    if(!tick){ window.requestAnimationFrame(atualizar); tick = true; }
+  }, { passive:true });
+  window.addEventListener('resize', atualizar, { passive:true });
+  atualizar();
+})();
+</script>
+</body>
+</html>
